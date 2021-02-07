@@ -8,16 +8,16 @@ The extension comes with premade buttons to make it easier to understand how it 
 **Follower Alert** - this button can replace your default Follower button. As it is connected to Streamlabs websocket, the follower alerts are instantaneous.     
 Trigger: `SLFollowerAlert`
 
-**Donation Alert** - triggers with any donations coming through StreamLabs. 
+**Donation Alert** - triggers with any donations coming through StreamLabs.     
 Trigger: `SLDonationAlert`  
 
-**Streamlabs Loyalty Points Redeem** - triggers whenever your viewers redeem StreamLabs loyalty points (not to be confused with Twitch channel points). It only retrieves the username and reward name.    
+**Streamlabs Loyalty Points Redeem** - triggers whenever your viewers redeem StreamLabs loyalty points (not to be confused with Twitch channel points). It only retrieves the username and reward name.      
 The trigger is `SLPoints <rewardname>`. For example, if your reward name is Test, the trigger name will be `SLPoints Test` (case sensitive).
 
-**Merchandise** - triggers with any product purchased from the Merch Store.    
+**Merchandise** - triggers with any product purchased from the Merch Store.      
 Trigger: `SLMerch`
 
-**YouTube Subscriber Alert** - triggers with any new YouTube subscribers. Your StreamLabs account needs to be merged with your YouTube account for this to work.      
+**YouTube Subscriber Alert** - triggers with any new YouTube subscribers. Your StreamLabs account needs to be merged with your YouTube account for this to work.       
 Trigger: `SLYTSubAlert`
 
 
