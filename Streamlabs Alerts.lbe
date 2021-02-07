@@ -1,0 +1,428 @@
+[extension_name]
+Streamlabs Alerts
+[insert_external]
+<div><p>Streamlabs Alerts extension is installed.</p></div>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js' type='text/javascript'></script>
+<!--
+* @name: Streamlabs Alerts, @version: 1.2, @author: Christinna#9031
+* -->
+[insert_command]
+lioranboardclient.send('{"type":"MESSAGE","topic":"ExtensionCommand","name":"Streamlabs Alerts","boxcount":6,"boxname1":"socket_token","boxtype1":"string","boxname2":"TwitchFollow|enable|disable|","boxtype2":"string","boxname3":"Donation|enable|disable|","boxtype3":"string","boxname4":"PointRedeem|enable|disable|","boxtype4":"string","boxname5":"Merchandise|enable|disable|","boxtype5":"string","boxname6":"YouTubeFollow|enable|disable|","boxtype6":"string"}');
+[insert_hook]
+case "StreamlabsAlerts":{   
+	let StreamlabsSettings = [LioranBoardJSON.socket_token, LioranBoardJSON.TwitchFollow, LioranBoardJSON.Donation, LioranBoardJSON.PointRedeem, LioranBoardJSON.Merchandise, LioranBoardJSON.YouTubeFollow]
+	sessionStorage.setItem('StreamlabsSettings', JSON.stringify(StreamlabsSettings));
+	if (window.StreamlabsSocket==undefined){
+	LBStreamlabsAlerts()}
+}break
+[insert_script]
+function LBStreamlabsAlerts (token, follow, donate, points, merch, ytfollow ){	
+
+	StreamlabsSocket ()
+
+    //Connect to socket
+  function StreamlabsSocket (){
+
+	let streamlabs = JSON.parse(sessionStorage.getItem('StreamlabsSettings'));
+	let token = streamlabs[0]; let follow = streamlabs[1]; let donate = streamlabs[2]; let points = streamlabs[3]; let merch = streamlabs[4]; let ytfollow = streamlabs[5]
+  
+    window.StreamlabsSocket = io(`https://sockets.streamlabs.com?token=${token}`, {transports: ['websocket']});
+  
+    //Listen to Streamlabs alerts
+    window.StreamlabsSocket.on('event', (eventData) => {
+		switch (eventData.type){
+		case "donation": 
+		if (donate =="enable"){
+		let amount=eventData.message[0].formatted_amount;
+        	let name=eventData.message[0].name;
+        	let message=eventData.message[0].message;
+		lioranboardclient.send('{"type":"MESSAGE","topic":"ExtensionTrigger","trigger":"SLDonationAlert","value1":"'+name+'", "value2":"'+amount+'","value3":"'+message+'"}') 
+		}
+		break;
+		case "follow":  
+		if (eventData.for =="twitch_account" && follow=="enable"){
+		let name = eventData.message[0].name
+		lioranboardclient.send('{"type":"MESSAGE","topic":"ExtensionTrigger","trigger":"SLFollowerAlert","value1":"'+name+'"}')
+		}
+		else if (eventData.for == 'youtube_account' && ytfollow=="enable"){
+		let name = eventData.message[0].name
+		lioranboardclient.send('{"type":"MESSAGE","topic":"ExtensionTrigger","trigger":"SLYTSubAlert","value1":"'+name+'"}')
+		}
+		break;
+		case "loyalty_store_redemption":
+		if (points =="enable"){
+		let user=eventData.message[0].from
+        	let reward=eventData.message[0].product
+		let trigger="SLPoints "+reward	
+		lioranboardclient.send('{"type":"MESSAGE","topic":"ExtensionTrigger","trigger":"'+trigger+'","value1":"'+user+'", "value2":"'+reward+'"}')
+		}
+		break;
+		case "merch": 
+		if (merch=="enable"){
+		let user=eventData.message[0].from
+		let product=eventData.message[0].product
+		lioranboardclient.send('{"type":"MESSAGE","topic":"ExtensionTrigger","trigger":"SLMerch","value1":"'+user+'", "value2":"'+product+'"}')
+		}
+		break;
+
+    }});
+
+    //listen to successful connection
+    window.StreamlabsSocket.on('connect', () => {
+    lioranboardclient.send('{"type":"MESSAGE","topic":"AlertMessage","message":"Connected to Streamlabs Alerts"}')
+    })
+    //handle disconnections
+    window.StreamlabsSocket.on('disconnect', () => {
+    lioranboardclient.send('{"type":"MESSAGE","topic":"AlertMessage","message":"Disconnected from Streamlabs Alerts. Attempting to reconnect in 30s."}')
+    setTimeout(StreamlabsSocket, 30000);
+    })
+  }
+  }
+[insert_over]
+[buttons_2x1]
+activepress="0.000000"
+border_size="0.000000"
+combine="0.000000"
+type="websocketaction+pubsubaction+"
+picture=""
+text="SL Youtube # Follower"
+color="12632256.000000"
+button_id="292.000000"
+extensiontrigger0="SLYTSubAlert"
+pubsubaction0="7.000000"
+pubsubqueue="0.000000"
+websocketdelay1="0.000000"
+websocketvalue8_1=""
+websocketvalue7_1=""
+websocketvalue6_1=""
+websocketvalue5_1=""
+websocketvalue4_1=""
+websocketvalue3_1=""
+websocketvalue2_1=""
+websocketvalue1_1="Thank you for the follow, /$yt_follower_name$/"
+websocketaction1="36.000000"
+websocketdelay0="0.000000"
+websocketvalue8_0=""
+websocketvalue7_0=""
+websocketvalue6_0=""
+websocketvalue5_0=""
+websocketvalue4_0=""
+websocketvalue3_0="false"
+websocketvalue2_0="1"
+websocketvalue1_0="yt_follower_name"
+websocketaction0="35.000000"
+[buttons_1x1]
+activepress="0.000000"
+border_size="0.000000"
+combine="0.000000"
+type="websocketaction+pubsubaction+"
+picture=""
+text="SL Merch"
+color="12632256.000000"
+button_id="295.000000"
+extensiontrigger0="SLMerch"
+pubsubaction0="7.000000"
+pubsubqueue="0.000000"
+websocketdelay2="0.000000"
+websocketvalue8_2=""
+websocketvalue7_2=""
+websocketvalue6_2=""
+websocketvalue5_2=""
+websocketvalue4_2=""
+websocketvalue3_2=""
+websocketvalue2_2=""
+websocketvalue1_2="/$merch_name$/ just purchased /$merch_product$/!"
+websocketaction2="36.000000"
+websocketdelay1="0.000000"
+websocketvalue8_1=""
+websocketvalue7_1=""
+websocketvalue6_1=""
+websocketvalue5_1=""
+websocketvalue4_1=""
+websocketvalue3_1="false"
+websocketvalue2_1="2"
+websocketvalue1_1="merch_product"
+websocketaction1="35.000000"
+websocketdelay0="0.000000"
+websocketvalue8_0=""
+websocketvalue7_0=""
+websocketvalue6_0=""
+websocketvalue5_0=""
+websocketvalue4_0=""
+websocketvalue3_0="false"
+websocketvalue2_0="1"
+websocketvalue1_0="merch_name"
+websocketaction0="35.000000"
+[buttons_0x1]
+activepress="0.000000"
+border_size="0.000000"
+combine="0.000000"
+type="websocketaction+pubsubaction+"
+picture=""
+text="SL Points # Cloudbot"
+color="12632256.000000"
+button_id="296.000000"
+extensiontrigger0="SLPoints Dummy"
+pubsubaction0="7.000000"
+pubsubqueue="0.000000"
+websocketdelay4="0.000000"
+websocketvalue8_4=""
+websocketvalue7_4=""
+websocketvalue6_4=""
+websocketvalue5_4=""
+websocketvalue4_4=""
+websocketvalue3_4=""
+websocketvalue2_4=""
+websocketvalue1_4="/$redeem_name$/ just redeemed /$redeem_ reward$/!"
+websocketaction4="36.000000"
+websocketdelay3="0.000000"
+websocketvalue8_3=""
+websocketvalue7_3=""
+websocketvalue6_3=""
+websocketvalue5_3=""
+websocketvalue4_3=""
+websocketvalue3_3="false"
+websocketvalue2_3="2"
+websocketvalue1_3="redeem_ reward"
+websocketaction3="35.000000"
+websocketdelay2="0.000000"
+websocketvalue8_2=""
+websocketvalue7_2=""
+websocketvalue6_2=""
+websocketvalue5_2=""
+websocketvalue4_2=""
+websocketvalue3_2="false"
+websocketvalue2_2="1"
+websocketvalue1_2="redeem_name"
+websocketaction2="35.000000"
+websocketdelay1="0.000000"
+websocketvalue8_1=""
+websocketvalue7_1=""
+websocketvalue6_1=""
+websocketvalue5_1=""
+websocketvalue4_1=""
+websocketvalue3_1=""
+websocketvalue2_1=""
+websocketvalue1_1="This trigger is for Streamlabs Cloudbot Points Redemption, NOT for Twitch Points redemption."
+websocketaction1="92.000000"
+websocketdelay0="0.000000"
+websocketvalue8_0=""
+websocketvalue7_0=""
+websocketvalue6_0=""
+websocketvalue5_0=""
+websocketvalue4_0=""
+websocketvalue3_0=""
+websocketvalue2_0=""
+websocketvalue1_0="the extension trigger name will be þSLPoints <reward name>þ. For example þSL Points Dummyþ for reward named þDummyþ"
+websocketaction0="92.000000"
+[buttons_2x0]
+activepress="1.000000"
+border_size="0.000000"
+combine="0.000000"
+type="websocketaction+pubsubaction+"
+picture=""
+text="SL Donation"
+color="12632256.000000"
+button_id="297.000000"
+extensiontrigger0="SLDonationAlert"
+pubsubaction0="7.000000"
+pubsubqueue="0.000000"
+websocketdelay3="0.000000"
+websocketvalue8_3=""
+websocketvalue7_3=""
+websocketvalue6_3=""
+websocketvalue5_3=""
+websocketvalue4_3=""
+websocketvalue3_3=""
+websocketvalue2_3=""
+websocketvalue1_3="/$donate_name$/ just donated /$donate_amount$/! Message: /$donate_message$/"
+websocketaction3="36.000000"
+websocketdelay2="0.000000"
+websocketvalue8_2=""
+websocketvalue7_2=""
+websocketvalue6_2=""
+websocketvalue5_2=""
+websocketvalue4_2=""
+websocketvalue3_2="false"
+websocketvalue2_2="3"
+websocketvalue1_2="donate_message"
+websocketaction2="35.000000"
+websocketdelay1="0.000000"
+websocketvalue8_1=""
+websocketvalue7_1=""
+websocketvalue6_1=""
+websocketvalue5_1=""
+websocketvalue4_1=""
+websocketvalue3_1="false"
+websocketvalue2_1="2"
+websocketvalue1_1="donate_amount"
+websocketaction1="35.000000"
+websocketdelay0="0.000000"
+websocketvalue8_0=""
+websocketvalue7_0=""
+websocketvalue6_0=""
+websocketvalue5_0=""
+websocketvalue4_0=""
+websocketvalue3_0="false"
+websocketvalue2_0="1"
+websocketvalue1_0="donate_name"
+websocketaction0="35.000000"
+[buttons_1x0]
+activepress="0.000000"
+border_size="0.000000"
+combine="0.000000"
+type="websocketaction+pubsubaction+"
+picture=""
+text="SL Twitch # Follower"
+color="12632256.000000"
+button_id="285.000000"
+extensiontrigger0="SLFollowerAlert"
+pubsubaction0="7.000000"
+pubsubqueue="0.000000"
+websocketdelay7="0.000000"
+websocketvalue8_7=""
+websocketvalue7_7=""
+websocketvalue6_7=""
+websocketvalue5_7=""
+websocketvalue4_7=""
+websocketvalue3_7=""
+websocketvalue2_7=""
+websocketvalue1_7="If you are replacing the default LB Follower alert, delete the original Follower Alert button or remove its trigger."
+websocketaction7="92.000000"
+websocketdelay6="0.000000"
+websocketvalue8_6=""
+websocketvalue7_6=""
+websocketvalue6_6=""
+websocketvalue5_6=""
+websocketvalue4_6=""
+websocketvalue3_6=""
+websocketvalue2_6=""
+websocketvalue1_6="Delete comments above if you're NOT using default LB notification system "
+websocketaction6="92.000000"
+websocketdelay5="0.000000"
+websocketvalue8_5=""
+websocketvalue7_5=""
+websocketvalue6_5=""
+websocketvalue5_5=""
+websocketvalue4_5=""
+websocketvalue3_5=""
+websocketvalue2_5="true"
+websocketvalue1_5="12114"
+websocketaction5="34.000000"
+websocketdelay4="0.000000"
+websocketvalue8_4=""
+websocketvalue7_4=""
+websocketvalue6_4=""
+websocketvalue5_4=""
+websocketvalue4_4="false"
+websocketvalue3_4="/$follower_name$/"
+websocketvalue2_4="top"
+websocketvalue1_4="notification_queue"
+websocketaction4="73.000000"
+websocketdelay3="0.000000"
+websocketvalue8_3=""
+websocketvalue7_3=""
+websocketvalue6_3=""
+websocketvalue5_3=""
+websocketvalue4_3="true"
+websocketvalue3_3="/$notif_follower$/"
+websocketvalue2_3="top"
+websocketvalue1_3="notification_queue"
+websocketaction3="73.000000"
+websocketdelay2="0.000000"
+websocketvalue8_2=""
+websocketvalue7_2=""
+websocketvalue6_2=""
+websocketvalue5_2=""
+websocketvalue4_2=""
+websocketvalue3_2=""
+websocketvalue2_2=""
+websocketvalue1_2="Delete comments below if you're NOT using default LB notification system: "
+websocketaction2="92.000000"
+websocketdelay1="0.000000"
+websocketvalue8_1=""
+websocketvalue7_1=""
+websocketvalue6_1=""
+websocketvalue5_1=""
+websocketvalue4_1=""
+websocketvalue3_1=""
+websocketvalue2_1=""
+websocketvalue1_1="/$follower_name$/, thank you for the follow!"
+websocketaction1="36.000000"
+websocketdelay0="0.000000"
+websocketvalue8_0=""
+websocketvalue7_0=""
+websocketvalue6_0=""
+websocketvalue5_0=""
+websocketvalue4_0=""
+websocketvalue3_0="false"
+websocketvalue2_0="1"
+websocketvalue1_0="follower_name"
+websocketaction0="35.000000"
+[buttons_0x0]
+activepress="0.000000"
+border_size="0.000000"
+combine="0.000000"
+type="websocketaction+pubsubaction+"
+picture=""
+text="STREAMLABS # INIT"
+color="6382079.000000"
+button_id="300.000000"
+extensiontrigger0="!transmitteralways"
+pubsubaction0="7.000000"
+pubsubqueue="0.000000"
+websocketdelay4="0.000000"
+websocketvalue8_4=""
+websocketvalue7_4=""
+websocketvalue6_4=""
+websocketvalue5_4=""
+websocketvalue4_4=""
+websocketvalue3_4=""
+websocketvalue2_4=""
+websocketvalue1_4="1000"
+websocketaction4="61.000000"
+websocketdelay3="0.000000"
+websocketvalue8_3=""
+websocketvalue7_3="enable"
+websocketvalue6_3="enable"
+websocketvalue5_3="enable"
+websocketvalue4_3="enable"
+websocketvalue3_3="enable"
+websocketvalue2_3=""
+websocketvalue1_3="Streamlabs Alerts"
+websocketaction3="71.000000"
+websocketdelay2="0.000000"
+websocketvalue8_2=""
+websocketvalue7_2=""
+websocketvalue6_2=""
+websocketvalue5_2=""
+websocketvalue4_2=""
+websocketvalue3_2=""
+websocketvalue2_2=""
+websocketvalue1_2="Choose which Alerts you want to enable and refresh your Transmitter"
+websocketaction2="92.000000"
+websocketdelay1="0.000000"
+websocketvalue8_1=""
+websocketvalue7_1=""
+websocketvalue6_1=""
+websocketvalue5_1=""
+websocketvalue4_1=""
+websocketvalue3_1=""
+websocketvalue2_1=""
+websocketvalue1_1="(go to API tokens and copy and paste your Socket API Token below)"
+websocketaction1="92.000000"
+websocketdelay0="0.000000"
+websocketvalue8_0=""
+websocketvalue7_0=""
+websocketvalue6_0=""
+websocketvalue5_0=""
+websocketvalue4_0=""
+websocketvalue3_0=""
+websocketvalue2_0=""
+websocketvalue1_0="retrieve your socket token here https://streamlabs.com/dashboard#/settings/api-settings "
+websocketaction0="92.000000"
+[configs]
+name="Streamlabs"
+background_color="8947848.000000"
+grid_height="3.000000"
+grid_width="3.000000"
