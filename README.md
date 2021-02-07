@@ -6,7 +6,7 @@ The extension comes with premade buttons to make it easier to understand how it 
 **Streamlabs Alerts INIT** - fill out all the values and refresh your transmitter (or close and reopen LB). The button will be automatically initiated every time you connect to Transmitter. You can retrieve your socket API token at https://streamlabs.com/dashboard#/settings/api-settings  in API Tokens. You can enable/disable alerts you wish to receive.
 
 **Follower Alert** - this button can replace your default Follower button. As it is connected to Streamlabs websocket, the follower alerts are instantaneous.     
-Trigger: `code>SLFollowerAlert`
+Trigger: `SLFollowerAlert`
 
 **Donation Alert** - triggers with any donations coming through StreamLabs. 
 Trigger: `SLDonationAlert`  
