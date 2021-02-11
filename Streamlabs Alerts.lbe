@@ -42,11 +42,11 @@ function LBStreamlabsAlerts (token, follow, donate, points, merch, ytfollow ){
 		case "follow":  
 		if (eventData.for =="twitch_account" && follow=="enable"){
 		let name = eventData.message[0].name
-		lioranboardclient.send('{"type":"MESSAGE","topic":"ExtensionTrigger","trigger":"SLFollowerAlert","value1":"'+name+'"}')
+		lioranboardclient.send('{"type":"MESSAGE","topic":"ExtensionTrigger","trigger":"SLFollowerAlert","value1":"'+name+'","value2":" ","value3":" "}')
 		}
 		else if (eventData.for == 'youtube_account' && ytfollow=="enable"){
 		let name = eventData.message[0].name
-		lioranboardclient.send('{"type":"MESSAGE","topic":"ExtensionTrigger","trigger":"SLYTSubAlert","value1":"'+name+'"}')
+		lioranboardclient.send('{"type":"MESSAGE","topic":"ExtensionTrigger","trigger":"SLYTSubAlert","value1":"'+name+'","value2":" ","value3":" "}')
 		}
 		break;
 		case "loyalty_store_redemption":
@@ -54,14 +54,14 @@ function LBStreamlabsAlerts (token, follow, donate, points, merch, ytfollow ){
 		let user=eventData.message[0].from
         	let reward=eventData.message[0].product
 		let trigger="SLPoints "+reward	
-		lioranboardclient.send('{"type":"MESSAGE","topic":"ExtensionTrigger","trigger":"'+trigger+'","value1":"'+user+'", "value2":"'+reward+'"}')
+		lioranboardclient.send('{"type":"MESSAGE","topic":"ExtensionTrigger","trigger":"'+trigger+'","value1":"'+user+'", "value2":"'+reward+'","value3":" "}')
 		}
 		break;
 		case "merch": 
 		if (merch=="enable"){
 		let user=eventData.message[0].from
 		let product=eventData.message[0].product
-		lioranboardclient.send('{"type":"MESSAGE","topic":"ExtensionTrigger","trigger":"SLMerch","value1":"'+user+'", "value2":"'+product+'"}')
+		lioranboardclient.send('{"type":"MESSAGE","topic":"ExtensionTrigger","trigger":"SLMerch","value1":"'+user+'", "value2":"'+product+'","value3":" "}')
 		}
 		break;
 
