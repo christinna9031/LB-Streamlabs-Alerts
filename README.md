@@ -3,22 +3,22 @@
 
 The extension comes with premade buttons to make it easier to understand how it works.    
 
-Streamlabs Alerts INIT - fill out all the values and refresh your transmitter (or close and reopen LB). The button will be automatically initiated every time you connect to Transmitter. You can retrieve your socket API token at https://streamlabs.com/dashboard#/settings/api-settings  in API Tokens. You can enable/disable alerts you wish to receive.
+**Streamlabs Alerts INIT** - fill out all the values and refresh your transmitter (or close and reopen LB). The button will be automatically initiated every time you connect to Transmitter. You can retrieve your socket API token at https://streamlabs.com/dashboard#/settings/api-settings  in API Tokens. You can enable/disable alerts you wish to receive.
 
-SL Follower Alert - this button can replace your default Follower button. As it is connected to Streamlabs websocket, the follower alerts are instantaneous.     
-Trigger: SLFollowerAlert
+**Follower Alert** - this button can replace your default Follower button. As it is connected to Streamlabs websocket, the follower alerts are instantaneous.     
+Trigger: `SLFollowerAlert`
 
-Donation Alert - triggers with any donations coming through StreamLabs. 
-Trigger: SLDonationAlert      
+**Donation Alert** - triggers with any donations coming through StreamLabs.     
+Trigger: `SLDonationAlert`  
 
-Streamlabs Loyalty Points Redeem - triggers whenever your viewers redeem StreamLabs loyalty points (not to be confused with Twitch channel points). It only retrieves the username and reward name.    
-The trigger is SLPoints <rewardname>. For example, if your reward name is Test, the trigger name will be SLPoints Test (case sensitive).
+**Streamlabs Loyalty Points Redeem** - triggers whenever your viewers redeem StreamLabs loyalty points (not to be confused with Twitch channel points). It only retrieves the username and reward name.      
+The trigger is `SLPoints <rewardname>`. For example, if your reward name is Test, the trigger name will be `SLPoints Test` (case sensitive).
 
-Merchandise - triggers with any product purchased from the Merch Store.    
-Trigger: SLMerch
+**Merchandise** - triggers with any product purchased from the Merch Store.      
+Trigger: `SLMerch`
 
-YouTube Subscriber Alert - triggers with any new YouTube subscribers. Your StreamLabs account needs to be merged with your YouTube account for this to work.      
-Trigger: SLYTSubAlert
+**YouTube Subscriber Alert** - triggers with any new YouTube subscribers. Your StreamLabs account needs to be merged with your YouTube account for this to work.       
+Trigger: `SLYTSubAlert`
 
 
 **How to install an extension:**
